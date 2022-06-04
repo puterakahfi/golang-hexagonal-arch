@@ -17,18 +17,22 @@ func NewGormRepository(db *gorm.DB) *bookRepositoryGorm {
 func (r *bookRepositoryGorm) GetListAllBooks() ([]entity.Book, error) {
 	var books []entity.Book
 	err := r.db.Find(&books).Error
-
 	return books, err
 }
 
 func (r *bookRepositoryGorm) GetBookDetailId(id int) (entity.Book, error) {
 	var book entity.Book
-	err := r.db.Find(&book, id).Error
+	err := r.db.First(&book, id).Error
 	return book, err
 }
 
 func (r *bookRepositoryGorm) RegisterNewBook(book entity.Book) (entity.Book, error) {
-
 	err := r.db.Create(&book).Error
+	return book, err
+}
+
+func (r *bookRepositoryGorm) DeleteBook(id int) (entity.Book, error) {
+	var book entity.Book
+	err := r.db.Delete(&book, id).Error
 	return book, err
 }

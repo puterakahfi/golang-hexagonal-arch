@@ -76,10 +76,12 @@ func (h *ginHandler) GetDetailBookByIdHandler() {
 func (h *ginHandler) DeleteBookHandler() {
 
 	h.engine.DELETE("/books/:id", func(c *gin.Context) {
-		id := c.Param("id")
+		id, _ := strconv.Atoi(c.Param("id"))
+		book, _ := h.service.DeleteBook(id)
+
 		c.JSON(http.StatusOK, gin.H{
-			"title": "Delete  book by id " + id,
-			"id":    id,
+			"title": "Delete  book by id ",
+			"data":  book,
 		})
 
 	})
