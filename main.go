@@ -5,12 +5,14 @@ import (
 	"golang-hexagonal-arch/config/gorm/mysql"
 	"golang-hexagonal-arch/module/book"
 	"golang-hexagonal-arch/module/book/entity"
+	"golang-hexagonal-arch/server"
 	"log"
-
-	"github.com/gin-gonic/gin"
 )
 
-const CONFIG_TYPE string = "env"
+const (
+	CONFIG_TYPE    string = "env"
+	SERVER_ADAPTER string = "gin"
+)
 
 func main() {
 
@@ -32,7 +34,10 @@ func main() {
 		log.Fatal("Db connection error", err)
 	}
 	db.AutoMigrate(&entity.Book{})
-	gin := gin.Default()
-	book.InitModule(db, gin)
-	gin.Run(":" + config.GetConfig("SERVER_PORT"))
+
+	server := server.InitGinServer()
+
+	book.InitModule(db, server.GetServerInstance())
+
+	server.Run()
 }

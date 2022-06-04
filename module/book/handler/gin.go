@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"golang-hexagonal-arch/module/book/dto"
 	"golang-hexagonal-arch/module/book/service"
 	"net/http"
@@ -52,9 +53,10 @@ func (h *ginHandler) GetListBooksHandler() {
 }
 
 func (h *ginHandler) RegisterRoutes() {
-
 	h.GetListBooksHandler()
 	h.GetDetailBookByIdHandler()
+	h.RegisterNewBookHandler()
+	h.DeleteBookHandler()
 }
 
 func (h *ginHandler) GetDetailBookByIdHandler() {
@@ -71,51 +73,60 @@ func (h *ginHandler) GetDetailBookByIdHandler() {
 
 }
 
-func (h *ginHandler) DeleteBook(c *gin.Context) {
+func (h *ginHandler) DeleteBookHandler() {
 
-	id := c.Param("id")
-	c.JSON(http.StatusOK, gin.H{
-		"title": "Delete  book by id " + id,
-		"id":    id,
+	h.engine.DELETE("/books/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		c.JSON(http.StatusOK, gin.H{
+			"title": "Delete  book by id " + id,
+			"id":    id,
+		})
+
 	})
+
 }
 
-func (h *ginHandler) RegisterNewBookHandler(c *gin.Context) {
+func (h *ginHandler) RegisterNewBookHandler() {
 
-	var newBook dto.BookDto
+	var bookRequest dto.BookDto
 
-	err := c.ShouldBindJSON(&newBook)
+	h.engine.POST("/books", func(c *gin.Context) {
+		err := c.ShouldBindJSON(&bookRequest)
 
-	if err != nil {
+		if err != nil {
 
-		errorMessages := []string{}
+			errorMessages := []string{}
 
-		var ve validator.ValidationErrors
+			var ve validator.ValidationErrors
 
-		if errors.As(err, &ve) {
-			for _, e := range err.(validator.ValidationErrors) {
-				errorMessage := e.Field() + " " + e.ActualTag()
-				errorMessages = append(errorMessages, errorMessage)
+			fmt.Println(err)
 
+			if errors.As(err, &ve) {
+				for _, e := range err.(validator.ValidationErrors) {
+					errorMessage := e.Field() + " " + e.ActualTag()
+					errorMessages = append(errorMessages, errorMessage)
+
+				}
+
+				// handle validator error
 			}
 
-			// handle validator error
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  http.StatusBadRequest,
+				"message": "something wrong",
+				"errors":  errorMessages,
+			})
+
+		} else {
+
+			newBook, _ := h.service.RegisterNewBook(bookRequest)
+			c.JSON(http.StatusOK, gin.H{
+				"status":    "success created the book",
+				"title":     newBook.Title,
+				"price":     newBook.Price,
+				"sub_title": newBook.SubTitle,
+			})
 		}
-
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  http.StatusBadRequest,
-			"message": "something wrong",
-			"errors":  errorMessages,
-		})
-
-	} else {
-
-		c.JSON(http.StatusOK, gin.H{
-			"status":    "success created the boook",
-			"title":     newBook.Title,
-			"price":     newBook.Price,
-			"sub_title": newBook.SubTitle,
-		})
-	}
+	})
 
 }

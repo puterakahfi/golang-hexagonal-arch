@@ -5,6 +5,7 @@ import "time"
 type Book struct {
 	ID          int
 	Title       string
+	SubTitle    string
 	Description string
 	Price       int
 	Rating      int
