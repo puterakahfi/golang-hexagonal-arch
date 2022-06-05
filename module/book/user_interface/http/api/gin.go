@@ -1,4 +1,4 @@
-package handler
+package book
 
 import (
 	"errors"
@@ -57,6 +57,8 @@ func (h *ginHandler) RegisterRoutes() {
 	h.GetDetailBookByIdHandler()
 	h.RegisterNewBookHandler()
 	h.DeleteBookHandler()
+	h.UpdateBookHandler()
+
 }
 
 func (h *ginHandler) GetDetailBookByIdHandler() {
@@ -88,9 +90,24 @@ func (h *ginHandler) DeleteBookHandler() {
 
 }
 
+func (h *ginHandler) UpdateBookHandler() {
+
+	h.engine.PATCH("/books/:id", func(c *gin.Context) {
+		id, _ := strconv.Atoi(c.Param("id"))
+		book, _ := h.service.UpdateBook(id)
+
+		c.JSON(http.StatusOK, gin.H{
+			"title": "Update Book   book by id ",
+			"data":  book,
+		})
+
+	})
+
+}
+
 func (h *ginHandler) RegisterNewBookHandler() {
 
-	var bookRequest dto.BookDto
+	var bookRequest dto.BookRequestDto
 
 	h.engine.POST("/books", func(c *gin.Context) {
 		err := c.ShouldBindJSON(&bookRequest)

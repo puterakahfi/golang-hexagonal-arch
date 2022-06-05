@@ -33,8 +33,14 @@ func (s *bookService) DeleteBook(id int) (entity.Book, error) {
 	return book, err
 }
 
-func (s *bookService) RegisterNewBook(bookRequest dto.BookDto) (entity.Book, error) {
-	newBook := dto.AssembleToEntity(bookRequest)
+func (s *bookService) UpdateBook(id int) (entity.Book, error) {
+
+	book, err := s.repository.UpdateBook(id)
+	return book, err
+}
+
+func (s *bookService) RegisterNewBook(bookRequest dto.BookRequestDto) (entity.Book, error) {
+	newBook := dto.AssembleRequestToEntity(bookRequest)
 	books, err := s.repository.RegisterNewBook(newBook)
 	return books, err
 }

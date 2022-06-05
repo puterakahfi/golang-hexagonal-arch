@@ -1,5 +1,6 @@
 package repository
 
+// Book Repository GORM Implementation (adapter)
 import (
 	"golang-hexagonal-arch/module/book/entity"
 
@@ -34,5 +35,14 @@ func (r *bookRepositoryGorm) RegisterNewBook(book entity.Book) (entity.Book, err
 func (r *bookRepositoryGorm) DeleteBook(id int) (entity.Book, error) {
 	var book entity.Book
 	err := r.db.Delete(&book, id).Error
+	return book, err
+}
+
+func (r *bookRepositoryGorm) UpdateBook(id int) (entity.Book, error) {
+	var book entity.Book
+
+	err := r.db.First(&book, id).Error
+
+	err = r.db.Save(&book).Error
 	return book, err
 }
