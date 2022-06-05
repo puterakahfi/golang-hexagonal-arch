@@ -3,8 +3,8 @@ package main
 import (
 	"golang-hexagonal-arch/component/config"
 	"golang-hexagonal-arch/config/gorm/mysql"
+	"golang-hexagonal-arch/migration"
 	"golang-hexagonal-arch/module/book"
-	"golang-hexagonal-arch/module/book/entity"
 	"golang-hexagonal-arch/server"
 	"log"
 )
@@ -33,7 +33,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Db connection error", err)
 	}
-	db.AutoMigrate(&entity.Book{})
+
+	migration.AutoMigrate(db)
 
 	server := server.InitGinServer()
 

@@ -1,8 +1,9 @@
 package book
 
 import (
+	"golang-hexagonal-arch/module/book/domain"
+	"golang-hexagonal-arch/module/book/domain/usecase"
 	"golang-hexagonal-arch/module/book/repository"
-	"golang-hexagonal-arch/module/book/service"
 	book_api "golang-hexagonal-arch/module/book/user_interface/http/api"
 
 	"github.com/gin-gonic/gin"
@@ -10,16 +11,16 @@ import (
 )
 
 type bookModule struct {
-	service    service.BookServiceInterface
+	usecase    usecase.BookUseCaseInterface
 	handler    book_api.BookHandlerInterface
-	repository repository.BookRepositoryInterface
+	repository domain.BookRepositoryInterface
 }
 
 func InitModule(db *gorm.DB, gin *gin.Engine) *bookModule {
 	bookModule := &bookModule{}
 	bookModule.repository = repository.NewGormRepository(db)
-	bookModule.service = service.NewService(bookModule.repository)
-	bookModule.handler = book_api.NewGinHandler(gin, bookModule.service)
+	bookModule.usecase = usecase.NewBookUseCase(bookModule.repository)
+	bookModule.handler = book_api.NewGinHandler(gin, bookModule.usecase)
 	bookModule.handler.RegisterRoutes()
 	return bookModule
 }

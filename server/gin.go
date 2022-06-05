@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Gin Server implementation(adapter)
 type ginServer struct {
 	gin *gin.Engine
 }

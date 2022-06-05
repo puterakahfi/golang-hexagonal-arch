@@ -2,7 +2,7 @@ package repository
 
 // Book Repository GORM Implementation (adapter)
 import (
-	"golang-hexagonal-arch/module/book/entity"
+	"golang-hexagonal-arch/module/book/domain/entity"
 
 	"gorm.io/gorm"
 )

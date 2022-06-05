@@ -1,7 +1,7 @@
-package repository
+package domain
 
 import (
-	"golang-hexagonal-arch/module/book/entity"
+	"golang-hexagonal-arch/module/book/domain/entity"
 )
 
 // Book Repository Contract (Port)

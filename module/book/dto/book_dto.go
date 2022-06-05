@@ -15,6 +15,7 @@ type BookResponseDto struct {
 	ID          string      `json:"id"`
 	Title       string      `json:"title"`
 	Price       json.Number `json:"price"`
+	Discount    int         `json:"discount"`
 	Description string      `json:"description"`
 	SubTitle    string      `json:"sub_title"`
 }

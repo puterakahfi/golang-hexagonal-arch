@@ -3,8 +3,8 @@ package book
 import (
 	"errors"
 	"fmt"
+	"golang-hexagonal-arch/module/book/domain/usecase"
 	"golang-hexagonal-arch/module/book/dto"
-	"golang-hexagonal-arch/module/book/service"
 	"net/http"
 	"strconv"
 
@@ -12,12 +12,13 @@ import (
 	"github.com/go-playground/validator"
 )
 
+// Gin handler adapter
 type ginHandler struct {
 	engine  *gin.Engine
-	service service.BookServiceInterface
+	service usecase.BookUseCaseInterface
 }
 
-func NewGinHandler(gin *gin.Engine, service service.BookServiceInterface) *ginHandler {
+func NewGinHandler(gin *gin.Engine, service usecase.BookUseCaseInterface) *ginHandler {
 
 	return &ginHandler{gin, service}
 }

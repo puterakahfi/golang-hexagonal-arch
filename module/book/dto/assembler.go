@@ -1,6 +1,6 @@
 package dto
 
-import "golang-hexagonal-arch/module/book/entity"
+import "golang-hexagonal-arch/module/book/domain/entity"
 
 func AssembleRequestToEntity(dto BookRequestDto) entity.Book {
 
@@ -11,4 +11,15 @@ func AssembleRequestToEntity(dto BookRequestDto) entity.Book {
 		Price:       int(price),
 	}
 	return newBook
+}
+
+func AssembleEntityToResponse(book *entity.Book) BookResponseDto {
+
+	bookResponse := BookResponseDto{
+		Title:       book.Title,
+		SubTitle:    book.SubTitle,
+		Description: book.Description,
+		Discount:    book.Discount,
+	}
+	return bookResponse
 }
