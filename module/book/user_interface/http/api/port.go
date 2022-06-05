@@ -1,4 +1,4 @@
-package book
+package api
 
 // Handler API port
 type BookHandlerInterface interface {

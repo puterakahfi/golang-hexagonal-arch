@@ -4,7 +4,6 @@ import (
 	"golang-hexagonal-arch/component/config"
 	"golang-hexagonal-arch/config/gorm/mysql"
 	"golang-hexagonal-arch/migration"
-	"golang-hexagonal-arch/module/book"
 	"golang-hexagonal-arch/server"
 	"log"
 )
@@ -36,9 +35,9 @@ func main() {
 
 	migration.AutoMigrate(db)
 
-	server := server.InitGinServer()
+	server, _ := server.GetServer("fiber")
 
-	book.InitModule(db, server.GetServerInstance())
+	//book.InitModule(db, server.GetServerInstance())
 
 	server.Run()
 }
